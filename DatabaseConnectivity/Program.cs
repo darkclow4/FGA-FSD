@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using System.Security.Cryptography.X509Certificates;
 
 namespace DBconnection
 {
@@ -10,45 +9,45 @@ namespace DBconnection
         static SqlConnection connection;
         static void Main(string[] args)
         {
-            //InsertRegion("Polar");
-            //DeleteRegion(6);
-            //UpdateRegion(name: "Australia", id: 7);
-            try { GetAllRegion(); } catch (Exception ex) { Console.WriteLine(ex.Message); }
+            //InsertRegion("Polar"); //Menambahkan region baru dengan nama Polar
+            //DeleteRegion(6); //Menghapus region dengan id 6
+            //UpdateRegion(name: "Australia", id: 7); //Merubah nama region pada id 7 dengan nama Australia
+            try { GetAllRegion(); } catch (Exception ex) { Console.WriteLine(ex.Message); } //Menampilkan semua region, jika gagal, menampilkan pesan gagal
 
-            GetRegion(9);
+            GetRegion(4); //Menampilkan region dengan id 4
         }
 
         public static void GetAllRegion()
         {
-            using (connection = new SqlConnection(ConnectionString))
+            using (connection = new SqlConnection(ConnectionString)) //Membuat koneksi
             {
 
                 //Membuat instance untuk command
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = "SELECT * FROM region";
+                SqlCommand command = new SqlCommand(); //membuat command
+                command.Connection = connection; //command menggunakan koneksi connection
+                command.CommandText = "SELECT * FROM region"; //perintah pada command
 
                 //Membuka koneksi
                 connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = command.ExecuteReader()) //mengeksekusi command dan membuat sqlDataReader untuk membaca hasil command yang telah diberikan
                 {
-                    if (reader.HasRows)
+                    if (reader.HasRows) //jika hasil eksekusi memiliki hasil (baris)
                     {
-                        while (reader.Read())
+                        while (reader.Read()) //melakukan print terhadap semua data hasil eksekusi
                         {
-                            Console.WriteLine("Id: " + reader[0]);
-                            Console.WriteLine("Name: " + reader[1]);
+                            Console.WriteLine("Id: " + reader[0]); //print kolom 0 (id)
+                            Console.WriteLine("Name: " + reader[1]); //print kolom 1 (name)
                             Console.WriteLine("====================");
                         }
                     }
-                    else
+                    else //jika tidak ada hasilnya
                     {
                         Console.WriteLine("Data not found!");
                     }
-                    reader.Close();
+                    reader.Close(); //menutup objek reader
                 }
-                connection.Close();
+                connection.Close(); //menutup koneksi
             }
         }
 
@@ -58,8 +57,8 @@ namespace DBconnection
             {
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = "SELECT * FROM region WHERE id = @id";
-                command.Parameters.Add(new SqlParameter("id", id));
+                command.CommandText = "SELECT * FROM region WHERE id = @id"; //perintah pada command dengan parameter
+                command.Parameters.Add(new SqlParameter("id", id)); //menambahkan nilai parameter id
 
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -86,33 +85,33 @@ namespace DBconnection
             //Membuka koneksi
             connection.Open();
 
-            SqlTransaction transaction = connection.BeginTransaction();
+            SqlTransaction transaction = connection.BeginTransaction(); //memulai transaksi
             try
             {
                 //Membuat instance untuk command
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
                 command.CommandText = "INSERT INTO region (name) VALUES (@name)";
-                command.Transaction = transaction;
+                command.Transaction = transaction; //command menggunakan Transaction transaction
 
                 //Membuat parameter
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "name";
-                pName.Value = name;
-                pName.SqlDbType = SqlDbType.VarChar;
+                SqlParameter pName = new SqlParameter(); //membuat parameter baru
+                pName.ParameterName = "name"; //nama parameter "name"
+                pName.Value = name; //dengan value variabel name
+                pName.SqlDbType = SqlDbType.VarChar; //tipe nilai di db
 
                 //Menambahkan parameter ke command
-                command.Parameters.Add(pName);
+                command.Parameters.Add(pName); //menambahkan parameter ke command
 
                 //Menjalankan command
-                int result = command.ExecuteNonQuery();
-                transaction.Commit();
+                int result = command.ExecuteNonQuery(); //melakukan eksekusi
+                transaction.Commit(); //akhir dari transaksi
 
-                if (result > 0)
+                if (result > 0) //jika jumlah baris yang berubah lebih dari 0, yang berarti data berhasil ditambahkan
                 {
                     Console.WriteLine("Data berhasil ditambahkan!");
                 }
-                else
+                else //jika data gagal ditambahkan
                 {
                     Console.WriteLine("Data gagal ditambahkan!");
                 }
@@ -121,14 +120,14 @@ namespace DBconnection
                 connection.Close();
 
             }
-            catch (Exception e)
+            catch (Exception e) //menangkap exception yang terjadi
             {
                 Console.WriteLine(e.Message);
                 try
                 {
-                    transaction.Rollback();
+                    transaction.Rollback(); //mencoba untuk melakukan rollback
                 }
-                catch (Exception rollback)
+                catch (Exception rollback) //jika rollback gagal dilakukan
                 {
                     Console.WriteLine(rollback.Message);
                 }
@@ -149,8 +148,8 @@ namespace DBconnection
                 try
                 {
                     command.CommandText = "UPDATE region SET name = @name WHERE id = @id";
-                    command.Parameters.Add(new SqlParameter("@name", name));
-                    command.Parameters.Add(new SqlParameter("@id", id));
+                    command.Parameters.Add(new SqlParameter("@name", name)); //menambahkan parameter name dengan nilai variabel name
+                    command.Parameters.Add(new SqlParameter("@id", id)); //menambahkan parameter id dengan nilai variabel id
 
                     int result = command.ExecuteNonQuery();
                     transaction.Commit();
