@@ -1,4 +1,6 @@
-﻿namespace Final_exam1.Views
+﻿using Microsoft.VisualBasic;
+
+namespace Final_exam1.Views
 {
     class MainUtils
     {
@@ -30,14 +32,23 @@
             }
             return outNumber;
         }
-        protected static DateOnly ValidateDate(string input)
+        protected static DateOnly? ValidateDate(string input)
         {
             DateOnly outDate;
+            if(input == "")
+            {
+                return null;
+            }
             bool valid = DateOnly.TryParse(input, out outDate);
             while(!valid) {
                 Println($"\nInvalid input. Date format is YYYY-MM-DD");
                 Print("Input : ");
-                valid = DateOnly.TryParse(Console.ReadLine(), out outDate);
+                input = Console.ReadLine();
+                if (input == "")
+                {
+                    return null;
+                }
+                valid = DateOnly.TryParse(input, out outDate);
             }
             return outDate;
         }
@@ -52,15 +63,39 @@
             }
             return outString;
         }
-        protected static float ValidateFloat(string input)
+        protected static int? ValidateInt(string input)
+        {
+            int outInt;
+            if(input == "")
+            {
+                return null;
+            }
+            bool valid = int.TryParse(input, out outInt);
+            while(!valid)
+            {
+                Println($"\nInvalid input. Input must be a number");
+                Print("Input : ");
+                valid = int.TryParse(Console.ReadLine(), out outInt);
+            }
+            
+            return outInt;
+        }
+        protected static float? ValidateFloat(string input, int maxNumber = 0)
         {
             float outNumber;
-            bool valid = float.TryParse(input, out outNumber);
+            bool valid;
+            if (input == "")
+            {
+                return null;
+            }
+            valid = maxNumber > 0? float.TryParse(input, out outNumber) && outNumber < maxNumber : float.TryParse(input, out outNumber);
+            string errorMessage = maxNumber > 0 ? $" and less than {maxNumber}" : "";
+            
             while (!valid)
             {
-                Println($"\nInvalid input. Input must be number.");
+                Println($"\nInvalid input. Input must be a number{errorMessage}.");
                 Print("Input : ");
-                valid = float.TryParse(Console.ReadLine(), out outNumber);
+                valid = maxNumber > 0 ? float.TryParse(Console.ReadLine(), out outNumber) && outNumber < maxNumber : float.TryParse(Console.ReadLine(), out outNumber);
             }
             return outNumber;
         }

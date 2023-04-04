@@ -6,10 +6,10 @@ namespace Final_exam1.Controllers
     class AnimeController
     {
         private NativeAnimeRepository repository = new NativeAnimeRepository();
-        public void Add(string title, DateOnly release_date, float rating, int status_id, int duration_minutes, int type_id)
+        public void Add(string title, DateOnly? release_date, float? rating, int status_id, int? duration_minutes, int type_id)
         {
-            
-            Anime animeRecord = new Anime(title, release_date, rating, status_id, duration_minutes, type_id);
+            int? id = null;
+            Anime animeRecord = new Anime(title, status_id, type_id, id, release_date, rating, duration_minutes);
 
             repository.Create(animeRecord);
         }

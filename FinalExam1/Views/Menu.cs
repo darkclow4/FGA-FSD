@@ -27,7 +27,14 @@ namespace Final_exam1.Views
             {
                 foreach (Anime anime in animeData)
                 {
+                    Println("========================================");
+                    Println($"ID : {anime.Id}");
                     Println($"Title : {anime.Title}");
+                    Println($"Release Date : {anime.Release_date}");
+                    Println($"Rating : {anime.Rating}");
+                    Println($"Status : {anime.Status_id}");
+                    Println($"Duration (minutes) : {anime.Duration_minutes}");
+                    Println($"Type : {anime.Type_id}\n");
                 }
             } else
             {
@@ -44,15 +51,15 @@ namespace Final_exam1.Views
             Println("===== Add Anime =====\n");
             Print("Title : ");
             string inputTitle = ValidateString(Console.ReadLine());
-            Print("Release Date (YYYY-MM-DD, not required) : \n");
-            DateOnly inputDate = ValidateDate(Console.ReadLine());
-            Print("Rating (not required): ");
-            float inputRating = ValidateFloat(Console.ReadLine());
-            Print("Status (1-3, 1. Upcoming, 2. Ongoing, 3. Completed) : \n");
+            Print("\nRelease Date (YYYY-MM-DD, not required) : \n");
+            DateOnly? inputDate = ValidateDate(Console.ReadLine());
+            Print("\nRating (not required): ");
+            float? inputRating = ValidateFloat(Console.ReadLine(), 10);
+            Print("\nStatus (1-3, 1. Upcoming, 2. Ongoing, 3. Completed) : \n");
             int inputStatus = ValidateMenu(Console.ReadLine(), 3);
-            Print("Duration (minutes, not required) : ");
-            int inputDuration = int.Parse(Console.ReadLine());
-            Print("Type (1-4, 1. Movie, 2. Series, 3. OVA, 4. ONA) : \n");
+            Print("\nDuration (minutes, not required) : ");
+            int? inputDuration = ValidateInt(Console.ReadLine());
+            Print("\nType (1-4, 1. Movie, 2. Series, 3. OVA, 4. ONA) : \n");
             int inputType = ValidateMenu(Console.ReadLine(), 4);
 
             

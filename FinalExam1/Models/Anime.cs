@@ -4,13 +4,13 @@
     {
         public int? Id { get; set; }
         public string Title { get; set; }
-        public DateOnly Release_date { get; set; }
-        public float Rating { get; set; }
+        public DateOnly? Release_date { get; set; }
+        public float? Rating { get; set; }
         public int Status_id { get; set; }
-        public int Duration_minutes { get; set; }
+        public int? Duration_minutes { get; set; }
         public int Type_id { get; set; }
 
-        public Anime(string title, DateOnly release_date, float rating, int status_id, int duration_minutes, int type_id, int? id = null)
+        public Anime(string title, int status_id, int type_id, int? id = null, DateOnly? release_date = null, float? rating = null, int? duration_minutes = null)
         {
             Id = id;
             Title = title;

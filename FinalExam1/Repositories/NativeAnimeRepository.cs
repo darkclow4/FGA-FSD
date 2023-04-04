@@ -24,27 +24,45 @@ namespace Final_exam1.Repositories
                     command.CommandText = "INSERT INTO anime (title, release_date, rating, status_id, duration_minutes, type_id) VALUES (@title, @release_date, @rating, @status_id, @duration_minutes, @type_id)";
                     command.Parameters.Add(new SqlParameter("@title", animeRecord.Title));
 
-                    //command.Parameters.Add(new SqlParameter("@release_date", animeRecord.Release_date)); => fail because DateOnly type
-                    SqlParameter pName = new SqlParameter();
-                    pName.ParameterName = "release_date";
-                    pName.Value = animeRecord.Release_date.ToDateTime(TimeOnly.MinValue);
-                    pName.SqlDbType = SqlDbType.Date;
-                    command.Parameters.Add(pName);
-
-                    command.Parameters.Add(new SqlParameter("@rating", Math.Round(animeRecord.Rating, 2)));
+                    if(animeRecord.Release_date != null )
+                    {
+                        SqlParameter pName = new SqlParameter();
+                        pName.ParameterName = "@release_date";
+                        pName.Value = animeRecord.Release_date?.ToDateTime(TimeOnly.MinValue);
+                        pName.SqlDbType = SqlDbType.Date;
+                        command.Parameters.Add(pName);
+                    } else
+                    {
+                        command.Parameters.Add(new SqlParameter("@release_date", DBNull.Value));
+                    }
+                    
+                    if(animeRecord.Rating != null )
+                    {
+                        command.Parameters.Add(new SqlParameter("@rating", Math.Round(animeRecord.Rating.Value, 2)));
+                    } else
+                    {
+                        command.Parameters.Add(new SqlParameter("@rating", DBNull.Value));
+                    }
+                    if(animeRecord.Duration_minutes != null)
+                    {
+                        command.Parameters.Add(new SqlParameter("@duration_minutes", animeRecord.Duration_minutes));
+                    } else
+                    {
+                        command.Parameters.Add(new SqlParameter("@duration_minutes", DBNull.Value));
+                    }
                     command.Parameters.Add(new SqlParameter("@status_id", animeRecord.Status_id));
-                    command.Parameters.Add(new SqlParameter("@duration_minutes", animeRecord.Duration_minutes));
+                    
                     command.Parameters.Add(new SqlParameter("@type_id", animeRecord.Type_id));
 
                     int result = command.ExecuteNonQuery();
                     transaction.Commit();
                     if (result > 0)
                     {
-                        Console.WriteLine("Success add new record.");
+                        Console.WriteLine("\nSuccess add new record.");
                     }
                     else
                     {
-                        Console.WriteLine("Fail to add new record.");
+                        Console.WriteLine("\nFail to add new record.");
                     }
                 }
                 catch (Exception e)
@@ -82,14 +100,17 @@ namespace Final_exam1.Repositories
                     {
                         while (reader.Read())
                         {
+                            DateOnly? releaseDate = reader.IsDBNull(2) ? null : DateOnly.FromDateTime(reader.GetDateTime(2));
+                            float? rating = reader.IsDBNull(3)? null : (float)reader.GetDouble(3);
+                            int? duration = reader.IsDBNull(5) ? null : reader.GetInt32(5);
                             Anime animeRecord = new Anime(
                                 reader.GetString(1),
-                                DateOnly.FromDateTime(reader.GetDateTime(2)),
-                                (float)reader.GetDouble(3),
                                 (int)reader.GetByte(4),
-                                reader.GetInt32(5),
                                 reader.GetInt32(6),
-                                reader.GetInt32(0)
+                                reader.GetInt32(0),
+                                releaseDate,
+                                rating,
+                                duration
                             );
                             AnimeList.Add(animeRecord);
                         }
