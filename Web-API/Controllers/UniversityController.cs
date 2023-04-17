@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Web_API.DataModels;
 using Web_API.Models;
 using Web_API.Repository.Contracts;
 
@@ -20,13 +21,13 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<ResultFormat<University>>> Get()
         {
-            var entities = await _universityRepository.GetAll();
+            var entities = await _universityRepository.GetAllAsync();
             var result = new ResultFormat<University>
             {
                 StatusCode = 200,
                 Status = "Ok",
                 Message = "Success",
-                Data = entities.Value.ToList()
+                Data = entities.ToList()
             };
             return result;
         }

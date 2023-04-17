@@ -49,7 +49,7 @@ public partial class SQLServerContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("password");
 
-            entity.HasOne(d => d.EmployeeNikNavigation).WithOne(p => p.TbMAccount).HasForeignKey<Account>(d => d.EmployeeNik);
+            entity.HasOne(d => d.EmployeeNikNavigation).WithOne(p => p.Account).HasForeignKey<Account>(d => d.EmployeeNik);
         });
 
         modelBuilder.Entity<Education>(entity =>
@@ -173,7 +173,7 @@ public partial class SQLServerContext : DbContext
 
             entity.HasOne(d => d.Education).WithOne(p => p.TbTrProfiling).HasForeignKey<Profiling>(d => d.EducationId);
 
-            entity.HasOne(d => d.EmployeeNikNavigation).WithOne(p => p.TbTrProfiling).HasForeignKey<Profiling>(d => d.EmployeeNik);
+            entity.HasOne(d => d.EmployeeNikNavigation).WithOne(p => p.Profiling).HasForeignKey<Profiling>(d => d.EmployeeNik);
         });
 
         OnModelCreatingPartial(modelBuilder);

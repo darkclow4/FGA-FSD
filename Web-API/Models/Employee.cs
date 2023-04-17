@@ -21,9 +21,9 @@ public partial class Employee
 
     public string PhoneNumber { get; set; } = null!;
 
-    public virtual Account? TbMAccount { get; set; }
+    public virtual Account? Account { get; set; }
 
-    public virtual Profiling? TbTrProfiling { get; set; }
+    public virtual Profiling? Profiling { get; set; }
 }
 
 public enum GenderEnum
