@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Web_API.Models;
+using Web_API.DataModels;
 
 namespace Web_API.Contexts;
 
@@ -180,4 +181,6 @@ public partial class SQLServerContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<Web_API.DataModels.RegisterDM>? RegisterDM { get; set; }
 }

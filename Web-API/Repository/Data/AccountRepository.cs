@@ -11,7 +11,6 @@ namespace Web_API.Repository.Data
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IUniversityRepository _universityRepository;
         private readonly IEducationRepository _educationRepository;
-        private readonly IAccountRepository _accountRepository;
         private readonly IProfilingRepository _profilingRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IAccountRoleRepository _accountRoleRepository;
@@ -19,7 +18,6 @@ namespace Web_API.Repository.Data
             IEmployeeRepository employeeRepository,
             IUniversityRepository universityRepository,
             IEducationRepository educationRepository,
-            IAccountRepository accountRepository,
             IRoleRepository roleRepository,
             IProfilingRepository profilingRepository,
             IAccountRoleRepository accountRoleRepository
@@ -28,7 +26,6 @@ namespace Web_API.Repository.Data
             _employeeRepository = employeeRepository;
             _universityRepository = universityRepository;
             _educationRepository = educationRepository;
-            _accountRepository = accountRepository;
             _roleRepository = roleRepository;
             _profilingRepository = profilingRepository;
             _accountRoleRepository = accountRoleRepository;
@@ -83,7 +80,7 @@ namespace Web_API.Repository.Data
                 EmployeeNik = registerDM.NIK,
                 Password = Hashing.HashPassword(registerDM.Password),
             };
-            await _accountRepository.InsertAsync(account);
+            await InsertAsync(account);
 
             var profiling = new Profiling
             {
