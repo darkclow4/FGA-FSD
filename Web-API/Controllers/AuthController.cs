@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using Web_API.DataModels;
 using Web_API.Repository.Contracts;
 
@@ -12,6 +13,46 @@ namespace Web_API.Controllers
         public AuthController(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
+        }
+
+        // POST - Login
+        [Route("login")]
+        [HttpPost]
+        public async Task<ActionResult<ResultFormat<string>>> PostLogin(LoginDM loginDM)
+        {
+            try
+            {
+                bool loginProcess = await _accountRepository.LoginAsync(loginDM);
+                if (loginProcess)
+                {
+                    var result = new ResultFormat<string>
+                    {
+                        StatusCode = 200,
+                        Status = "Ok",
+                        Message = "Success"
+                    };
+                    return Ok(result);
+                } else
+                {
+                    var result = new ResultFormat<string>
+                    {
+                        StatusCode = 400,
+                        Status = "Failed",
+                        Message = "Wrong email and password combination"
+                    };
+                    return BadRequest(result);
+                }
+                
+            } catch (Exception ex)
+            {
+                var result = new ResultFormat<string>
+                {
+                    StatusCode = 400,
+                    Status = "Failed",
+                    Message = ex.Message
+                };
+                return result;
+            }
         }
 
         // Post - Register
@@ -29,13 +70,13 @@ namespace Web_API.Controllers
                     Message = "Success"
                 };
                 return result;
-            } catch
+            } catch (Exception ex)
             {
                 var result = new ResultFormat<string>
                 {
                     StatusCode = 400,
                     Status = "Failed",
-                    Message = "Failed to add data"
+                    Message = "Failed to add data. " + ex.Message
                 };
                 return result;
             }
